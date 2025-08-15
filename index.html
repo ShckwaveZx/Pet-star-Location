@@ -118,7 +118,21 @@
                 obj.wrapper.appendChild(label);
             });
         }
+		
+        obj.img.addEventListener('click', e => {
+            const rect = obj.img.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            const name = prompt("ตั้งชื่อจุด:");
+            if (name) {
+                markers.push({x, y, name});
+                localStorage.setItem(obj.key, JSON.stringify(markers));
+                renderMarkers();
+            }
+        });
 
+        renderMarkers();
+    });
 	    
 
     document.getElementById('clear-btn').addEventListener('click', () => {
@@ -131,3 +145,4 @@
 
 </body>
 </html>
+
