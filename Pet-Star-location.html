@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>มาร์คจุดบนสองรูป</title>
+<style>
+    body {
+        font-family: sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    .wrapper {
+        display: flex;
+        flex-direction: column; /* วางบน-ล่าง */
+        gap: 20px;
+        align-items: center;
+    }
+    .image-wrapper {
+        width: 90vw;       /* ใช้พื้นที่กว้างมาก */
+        height: 100vh;      /* สูงประมาณครึ่งหน้าจอ */
+        border: 2px solid #ccc;
+        background-color: white;
+        position: relative;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        user-select: none;
+        /* pointer-events: none; */ /* เอาออกแล้ว */
+    }
+    .marker {
+        position: absolute;
+        background-color: rgb(255, 0, 0);
+        color: white;
+        border-radius: 50%;
+        width: 4px;
+        height: 4px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 20px;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        border: 2px solid white;
+    }
+    .label {
+        position: absolute;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 3px 6px;
+        font-size: 14px;
+        border-radius: 4px;
+        transform: translate(-50%, -120%);
+        white-space: nowrap;
+        pointer-events: none;
+    }
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background: #007BFF;
+        color: white;
+        border-radius: 5px;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<h1>มาร์คจุดบนสองรูป (บน-ล่าง)</h1>
+<div class="wrapper">
+    <!-- รูปบน -->
+    <div class="image-wrapper" id="wrapper1">
+        <img id="image1" src="https://media.discordapp.net/attachments/1397158982430228604/1405896720717713429/FiveM_b2699_GTAProcess_2025-08-15_19-51-01_618.png?ex=68a07eda&is=689f2d5a&hm=90a5c8e99a7bd44b7ce8892bcc702535dc39218fc25be37da8fd202fd8d70e3f&=&format=webp&quality=lossless&width=1215&height=683" alt="Image1">
+    </div>
+    <!-- รูปล่าง -->
+    <div class="image-wrapper" id="wrapper2">
+        <img id="image2" src="https://media.discordapp.net/attachments/1397158982430228604/1405896719715270736/FiveM_b2699_GTAProcess_2025-08-15_19-51-18_075.png?ex=68a07eda&is=689f2d5a&hm=3c513b9f54182107e146651d8d625799d0ce2144d93098710bb178f09a434ec3&=&format=webp&quality=lossless&width=1215&height=683" alt="Image2">
+    </div>
+</div>
+
+<button id="clear-btn">ล้างข้อมูลทั้งหมด</button>
+
+<script>
+    const images = [
+        {wrapper: document.getElementById('wrapper1'), img: document.getElementById('image1'), key: 'markers1'},
+        {wrapper: document.getElementById('wrapper2'), img: document.getElementById('image2'), key: 'markers2'}
+    ];
+
+    images.forEach(obj => {
+        let markers = JSON.parse(localStorage.getItem(obj.key) || '[]');
+
+        function renderMarkers() {
+            obj.wrapper.querySelectorAll('.marker, .label').forEach(el => el.remove());
+            markers.forEach(m => {
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = m.x + '%';
+                marker.style.top = m.y + '%';
+                marker.title = m.name;
+
+                const label = document.createElement('div');
+                label.className = 'label';
+                label.style.left = m.x + '%';
+                label.style.top = m.y + '%';
+                label.textContent = m.name;
+
+                obj.wrapper.appendChild(marker);
+                obj.wrapper.appendChild(label);
+            });
+        }
+
+	    
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+        if(confirm("คุณต้องการล้างข้อมูลทั้งหมดหรือไม่?")) {
+            images.forEach(obj => localStorage.removeItem(obj.key));
+            location.reload();
+        }
+    });
+</script>
+
+</body>
+</html>
